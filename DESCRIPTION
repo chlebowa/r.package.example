@@ -6,7 +6,7 @@ Authors@R:
 Description: This is an empty dummy package.
 License: MIT + file LICENSE
 Imports:
-    cli
+    cli,
     centroidr
 Suggests:
     testthat (>= 3.0.0)
