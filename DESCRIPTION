@@ -5,11 +5,14 @@ Authors@R:
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
 Description: This is an empty dummy package.
 License: MIT + file LICENSE
+Imports:
+    cli
+    centroidr
+Suggests:
+    testthat (>= 3.0.0)
+Remotes: 
+    olobiolo/centroidr
+Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-Imports:
-    cli
-Suggests:
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
