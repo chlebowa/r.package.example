@@ -10,9 +10,8 @@ Imports:
     centroidr
 Suggests:
     testthat (>= 3.0.0)
-Remotes: 
-    olobiolo/centroidr
 Config/testthat/edition: 3
+Config/Needs/website: olobiolo/centroidr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
