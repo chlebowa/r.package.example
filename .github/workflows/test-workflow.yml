@@ -31,5 +31,5 @@ jobs:
         env:
           NAME: "my guy"
       - name: Show token
-        run: cat(Sys.getenv("GITHUB_PAT"))
+        run: cat(nchar(Sys.getenv("GITHUB_PAT")))
         shell: Rscript {0}
