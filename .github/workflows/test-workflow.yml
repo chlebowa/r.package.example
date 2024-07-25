@@ -46,6 +46,7 @@ jobs:
       #     install.packages("remotes")
       #     remotes::install_github("olobiolo/centroidr")
       #   shell: Rscript {0}
+
       - name: Report centroidr installation
         run: |
           any(grepl("centroidr", rownames(installed.packages())))
