@@ -31,5 +31,15 @@ jobs:
         env:
           NAME: "my guy"
 
-      - name: Install dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
+      # - name: Install dependencies
+      #   uses: r-lib/actions/setup-r-dependencies@v2
+      - name: Install centroidr package
+        run: |
+          install.packages("remotes")
+          remotes::install_github("olobiolo/centroidr")
+        shell: Rscript {0}
+      - name: Report centroidr installation
+        run: |
+          grepl("centroidr", rownames(installed.packages()))
+          grep("cent", rownames(installed.packages()), value = TRUE)
+        shell: Rscript {0}
