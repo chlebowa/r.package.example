@@ -36,6 +36,12 @@ jobs:
 
       - name: Install dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::centroidr
+          needs: |
+            website
+
       # - name: Install centroidr package
       #   run: |
       #     install.packages("remotes")
