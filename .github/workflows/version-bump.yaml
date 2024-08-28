@@ -8,7 +8,7 @@ on:
 
 env:
   PACKAGE_NAME: r.package.example
-  PACKAGE_NAME_DERIVED: ${${{ github.repository }}/${{ github.repository_owner }}\/}
+  PACKAGE_NAME_DERIVED: ${${{ github.repository }}/$${{ github.repository_owner }}\/}
 
 concurrency:
   group: vbump-${{ github.event.pull_request.numer || github.ref }}
@@ -24,15 +24,15 @@ jobs:
       !contains(github.event.commits[0].message, '[skip vbump]') ||
         !contains(github.event.head_commit.message, '[skip vbump]')
 
-    container:
-      image: docker.io/rocker/tidyverse:latest
+    # container:
+    #   image: docker.io/rocker/tidyverse:latest
 
-    steps:
+    # steps:
 
-      - name: Checkout repo 🛎
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.head_ref }}
+    #   - name: Checkout repo 🛎
+    #     uses: actions/checkout@v4.1.1
+    #     with:
+    #       ref: ${{ github.head_ref }}
 
       - name: Report repo name
         shell: bash
