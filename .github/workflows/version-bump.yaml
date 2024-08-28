@@ -39,7 +39,9 @@ jobs:
           echo "package name is ${{ env.PACKAGE_NAME }}"
           echo "repository is ${{ github.repository }}"
           echo "repository owner is ${{ github.repository_owner }}"
-          echo "target is ${chlebowa/r.package.example/chlebowa\/}"
+          FULL_NAME=${{ github.repository }}
+          OWNER_NAME=${{ github.repository_owner }}
+          echo ${FULL_NAME/$OWNER_NAME\/}
 
     #   - name: Locate package root
     #     shell: bash
