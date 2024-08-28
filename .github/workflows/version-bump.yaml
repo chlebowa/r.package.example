@@ -63,7 +63,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
-          [ ! - e .NEWS.md ] || echo "NEWS_FILE_EXISTS=true" >> $GITHUB_OUTPUT
+          [ ! -e NEWS.md ] || echo "NEWS_FILE_EXISTS=true" >> $GITHUB_OUTPUT
           NEWS_FILE=$(find . -name NEWS.md)
           echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
 
