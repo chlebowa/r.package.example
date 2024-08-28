@@ -39,7 +39,7 @@ jobs:
 
       - name: Bump version in DESCRIPTION 📜
         if: |
-          ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
