@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           PACKAGE_ROOT=$(dirname $(find . -name DESCRIPTION))
-          echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> GITHUB_ENV
+          echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> $GITHUB_ENV
           echo ${{ env.PACKAGE_ROOT }}
 
       - name: Bump version in DESCRIPTION 📜
@@ -56,25 +56,21 @@ jobs:
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
           NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
-          echo NEW_VERSION=${NEW_VERSION} >> GITHUB_ENV
+          echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
       - name: Find NEWS.md file
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
           NEWS_FILE=$(find . -name NEWS.md)
-          echo "NEWS_FILE=${NEWS_FILE}" >> GITHUB_ENV
+          echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
 
       - name: Print env vars
         shell: bash
-        env:
-          PACKAGE_ROOT: ${{ env.PACKAGE_ROOT }}
-          NEWS_FILE: ${{ env.NEWS_FILE }}
-          NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
-          echo "package root: ${PACKAGE_ROOT}"
-          echo "news file: ${env.NEWS_FILE}"
-          echo "package version: ${NEW_VERSION}"
+          echo "package root: ${{ env.PACKAGE_ROOT }}"
+          echo "news file: ${{ env.NEWS_FILE }}"
+          echo "package version: ${{ env.NEW_VERSION }}"
 
       # - name: Bump version in NEWS.md
       #   if: |
