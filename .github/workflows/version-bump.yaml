@@ -60,7 +60,8 @@ jobs:
 
       - name: File existence
         working-directory: ${{ env.PACKAGE_ROOT }}
-        if: [ -e NEWS.md ]
+        if: |
+          hashFiles('NEWS.md') != ''
         shell: bash
         run: echo "proceeding"
 
