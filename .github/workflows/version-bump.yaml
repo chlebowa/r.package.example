@@ -65,7 +65,7 @@ jobs:
         run: |
           NEWS_FILE=$(find . -name NEWS.md)
           echo "NEWS_FILE=${NEWS_FILE}" >> GITHUB_ENV
-          echo "news file: ${env.NEWS_FILE}"
+          echo "news file: ${NEWS_FILE}"
 
       # - name: Bump version in NEWS.md
       #   if: |
