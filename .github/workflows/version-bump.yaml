@@ -62,7 +62,7 @@ jobs:
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
           NEWS_FILE=$(find . -name NEWS.md})
-          echo "NEWS_FILE=${NEWS.md}" >> GITHUB_ENV
+          echo "NEWS_FILE=${NEWS_FILE}" >> GITHUB_ENV
 
       - name: Bump version in NEWS.md
         if: |
