@@ -6,6 +6,10 @@ on:
     branches:
       - testbranch
 
+env:
+  PACKAGE_NAME: r.package.example
+  PACKAGE_NAME_DERIVED: ${${{ github.repository }}/${{ github.repository_owner }}\/}
+
 concurrency:
   group: vbump-${{ github.event.pull_request.numer || github.ref }}
   cancel-in-progress: true
@@ -30,59 +34,65 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Locate package root
+      - name: Report repo name
         shell: bash
-        run: |
-          PACKAGE_ROOT=$(dirname $(find . -name DESCRIPTION))
-          echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> $GITHUB_ENV
-          echo ${{ env.PACKAGE_ROOT }}
+        run:
+          echo "package name is ${{ env.PACKAGE_NAME }}"
+          echo "derived package name is ${{ env.PACKAGE_NAME_DERIVED }}"
 
-      - name: Bump version in DESCRIPTION 📜
-        if: github.event_name == 'push'
-          # github.event_name == 'push' && github.ref == 'refs/heads/main'
-        shell: Rscript {0}
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          desc::desc_bump_version("dev", normalize = TRUE)
+    #   - name: Locate package root
+    #     shell: bash
+    #     run: |
+    #       PACKAGE_ROOT=$(dirname $(find . -name DESCRIPTION))
+    #       echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> $GITHUB_ENV
+    #       echo ${{ env.PACKAGE_ROOT }}
 
-      - name: Update Date field in DESCRIPTION 📅
-        shell: Rscript {0}
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          if (desc::desc_has_fields("Date")) desc::desc_set("Date", Sys.Date())
+    #   - name: Bump version in DESCRIPTION 📜
+    #     if: github.event_name == 'push'
+    #       # github.event_name == 'push' && github.ref == 'refs/heads/main'
+    #     shell: Rscript {0}
+    #     working-directory: ${{ env.PACKAGE_ROOT }}
+    #     run: |
+    #       desc::desc_bump_version("dev", normalize = TRUE)
 
-      - name: Read new package version
-        shell: bash
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
-          echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
+    #   - name: Update Date field in DESCRIPTION 📅
+    #     shell: Rscript {0}
+    #     working-directory: ${{ env.PACKAGE_ROOT }}
+    #     run: |
+    #       if (desc::desc_has_fields("Date")) desc::desc_set("Date", Sys.Date())
 
-      - name: Bump version in NEWS.md
-        if: |
-          hashFiles('NEWS.md') != ''
-        shell: Rscript {0}
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        env:
-          NEW_VERSION: ${{ env.NEW_VERSION }}
-        run: |
-          suppressWarnings(readLines("NEWS.md"))[-1L] |>
-            append(
-              values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
-              after = 0L
-            ) |>
-            writeLines(con = "NEWS.md")
+    #   - name: Read new package version
+    #     shell: bash
+    #     working-directory: ${{ env.PACKAGE_ROOT }}
+    #     run: |
+    #       NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
+    #       echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
-      - name: Commit and push changes
-        shell: bash
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com>"
-          git config --global --add safe.directory /__w/r.package.example/r.package.example
-          git add DESCRIPTION
-          if [ -e NEWS.md ]; then
-              git add NEWS.md
-          fi
-          git commit -m "bump version to ${{ env.NEW_VERSION }} [skip actions]"
-          git push --force
+    #   - name: Bump version in NEWS.md
+    #     if: |
+    #       hashFiles('NEWS.md') != ''
+    #     shell: Rscript {0}
+    #     working-directory: ${{ env.PACKAGE_ROOT }}
+    #     env:
+    #       NEW_VERSION: ${{ env.NEW_VERSION }}
+    #     run: |
+    #       suppressWarnings(readLines("NEWS.md"))[-1L] |>
+    #         append(
+    #           values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
+    #           after = 0L
+    #         ) |>
+    #         writeLines(con = "NEWS.md")
+
+    #   - name: Commit and push changes
+    #     shell: bash
+    #     working-directory: ${{ env.PACKAGE_ROOT }}
+    #     run: |
+    #       git config --global user.name "github-actions[bot]"
+    #       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com>"
+    #       git config --global --add safe.directory /__w/r.package.example/r.package.example
+    #       git add DESCRIPTION
+    #       if [ -e NEWS.md ]; then
+    #           git add NEWS.md
+    #       fi
+    #       git commit -m "bump version to ${{ env.NEW_VERSION }} [skip actions]"
+    #       git push --force
