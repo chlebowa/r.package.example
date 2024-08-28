@@ -57,6 +57,13 @@ jobs:
           NEW_VERSION=$(R --slave -- vanilla -e 'as.character(desc::desc_get_version())')
           echo NEW_VERSION=${NEW_VERSION} >> GITHUB_ENV
 
+      - name: Find NEWS.md file
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          NEWS_FILE=$(find . -name NEWS.md})
+          echo "NEWS_FILE=${NEWS.md}" >> GITHUB_ENV
+
       - name: Bump version in NEWS.md
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
