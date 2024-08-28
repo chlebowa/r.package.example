@@ -35,6 +35,7 @@ jobs:
         run: |
           PACKAGE_ROOT=$(dirname $(find . -name DESCRIPTION))
           echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> GITHUB_ENV
+          echo ${{ env.PACKAGE_ROOT }}
 
       - name: Bump version in DESCRIPTION 📜
         if: |
@@ -54,8 +55,9 @@ jobs:
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
-          NEW_VERSION=$(R --slave -- vanilla -e 'as.character(desc::desc_get_version())')
+          NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
           echo NEW_VERSION=${NEW_VERSION} >> GITHUB_ENV
+          echo ${{ env.NEW_VERSION }}
 
       - name: Find NEWS.md file
         shell: bash
@@ -63,30 +65,33 @@ jobs:
         run: |
           NEWS_FILE=$(find . -name NEWS.md})
           echo "NEWS_FILE=${NEWS_FILE}" >> GITHUB_ENV
+          echo ${{ env.NEWS_FILE }}
+          [ - e ${{ env.NEWS_FILE }} ] echo "no file found"
 
-      - name: Bump version in NEWS.md
-        if: |
-          ${{ env.NEWS_FILE }}
-        shell: Rscript {0}
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        env:
-          NEW_VERSION: ${{ env.NEW_VERSION }}
-        run: |
-          suppressWarnings(readLines("NEWS.md"))[-1L] |>
-            append(
-              values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
-              after = 0L
-            ) |>
-            writeLines(con = "NEWS.md")
 
-      - name: Commit and push changes
-        if: |
-          ${{ env.NEW_VERSION }}
-        shell: bash
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          git add DESCRIPTION NEWS.md
-          git commit \
-            -m "bump version to ${{ env.NEW_VERSION }} [skip actions]" \
-            --author="github-actiosn[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-          git push --force
+      # - name: Bump version in NEWS.md
+      #   if: |
+      #     ${{ env.NEWS_FILE }}
+      #   shell: Rscript {0}
+      #   working-directory: ${{ env.PACKAGE_ROOT }}
+      #   env:
+      #     NEW_VERSION: ${{ env.NEW_VERSION }}
+      #   run: |
+      #     suppressWarnings(readLines("NEWS.md"))[-1L] |>
+      #       append(
+      #         values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
+      #         after = 0L
+      #       ) |>
+      #       writeLines(con = "NEWS.md")
+
+      # - name: Commit and push changes
+      #   if: |
+      #     ${{ env.NEW_VERSION }}
+      #   shell: bash
+      #   working-directory: ${{ env.PACKAGE_ROOT }}
+      #   run: |
+      #     git add DESCRIPTION NEWS.md
+      #     git commit \
+      #       -m "bump version to ${{ env.NEW_VERSION }} [skip actions]" \
+      #       --author="github-actiosn[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+      #     git push --force
