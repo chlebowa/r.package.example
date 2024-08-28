@@ -58,22 +58,11 @@ jobs:
           NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
           echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
-      - name: Check for NEWS.md file
-        id: find-news
-        shell: bash
+      - name: File existence
         working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          [ ! -e NEWS.md ] || echo "NEWS_FILE_EXISTS=true" >> $GITHUB_OUTPUT
-          NEWS_FILE=$(find . -name NEWS.md)
-          echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
-
-      - name: Check bool
-        if: |
-          steps.find-news.outputs.NEWS_FILE_EXISTS == 'true' ||
-            ${{ env.NEWS_FILE }}
+        if: [ -e NEWS.md ]
         shell: bash
-        run:
-          echo "proceeding"
+        run: echo "proceeding"
 
       # - name: Bump version in NEWS.md
       #   if: |
