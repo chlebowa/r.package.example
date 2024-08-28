@@ -38,8 +38,8 @@ jobs:
           echo ${{ env.PACKAGE_ROOT }}
 
       - name: Bump version in DESCRIPTION 📜
-        if: |
-          github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push'
+          # github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
@@ -77,6 +77,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
+          git config --global --add safe.directory /__w/r.package.example/r.package.example
           git status
           git add DESCRIPTION NEWS.md
           git commit \
