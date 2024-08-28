@@ -58,27 +58,20 @@ jobs:
           NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
           echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
-      - name: File existence
-        working-directory: ${{ env.PACKAGE_ROOT }}
+      - name: Bump version in NEWS.md
         if: |
           hashFiles('NEWS.md') != ''
-        shell: bash
-        run: echo "proceeding"
-
-      # - name: Bump version in NEWS.md
-      #   if: |
-      #     steps.find-news.outputs.NEWS_FILE_EXISTS == 'true'
-      #   shell: Rscript {0}
-      #   working-directory: ${{ env.PACKAGE_ROOT }}
-      #   env:
-      #     NEW_VERSION: ${{ env.NEW_VERSION }}
-      #   run: |
-      #     suppressWarnings(readLines("NEWS.md"))[-1L] |>
-      #       append(
-      #         values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
-      #         after = 0L
-      #       ) |>
-      #       writeLines(con = "NEWS.md")
+        shell: Rscript {0}
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
+        run: |
+          suppressWarnings(readLines("NEWS.md"))[-1L] |>
+            append(
+              values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
+              after = 0L
+            ) |>
+            writeLines(con = "NEWS.md")
 
       # - name: Commit and push changes
       #   if: |
