@@ -65,27 +65,20 @@ jobs:
           NEWS_FILE=$(find . -name NEWS.md)
           echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
 
-      - name: Print env vars
-        shell: bash
+      - name: Bump version in NEWS.md
+        if: |
+          ${{ env.NEWS_FILE }}
+        shell: Rscript {0}
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
-          echo "package root: ${{ env.PACKAGE_ROOT }}"
-          echo "news file: ${{ env.NEWS_FILE }}"
-          echo "package version: ${{ env.NEW_VERSION }}"
-
-      # - name: Bump version in NEWS.md
-      #   if: |
-      #     ${{ env.NEWS_FILE }}
-      #   shell: Rscript {0}
-      #   working-directory: ${{ env.PACKAGE_ROOT }}
-      #   env:
-      #     NEW_VERSION: ${{ env.NEW_VERSION }}
-      #   run: |
-      #     suppressWarnings(readLines("NEWS.md"))[-1L] |>
-      #       append(
-      #         values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
-      #         after = 0L
-      #       ) |>
-      #       writeLines(con = "NEWS.md")
+          suppressWarnings(readLines("NEWS.md"))[-1L] |>
+            append(
+              values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
+              after = 0L
+            ) |>
+            writeLines(con = "NEWS.md")
 
       # - name: Commit and push changes
       #   if: |
