@@ -35,10 +35,11 @@ jobs:
 
       - name: Report repo name
         shell: bash
-        run:
-          echo "package name is ${{ env.PACKAGE_NAME }} \n"
-          echo "repository is ${{ github.repository }} \n"
-          echo "repository owner is ${{ github.repository_owner }} \n"
+        run: |
+          echo "package name is ${{ env.PACKAGE_NAME }}"
+          echo "repository is ${{ github.repository }}"
+          echo "repository owner is ${{ github.repository_owner }}"
+          echo "target is ${chlebowa/r.package.example/chlebowa\/}"
 
     #   - name: Locate package root
     #     shell: bash
