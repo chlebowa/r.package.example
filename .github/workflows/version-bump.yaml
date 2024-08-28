@@ -68,9 +68,11 @@ jobs:
           echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
 
       - name: Check bool
+        if: |
+          steps.find-news.outputs.NEWS_FILE_EXISTS == 'true'
         shell: bash
         run:
-          echo ${{ steps.find-news.outputs.NEWS_FILE_EXISTS }}
+          echo "proceeding"
 
       # - name: Bump version in NEWS.md
       #   if: |
