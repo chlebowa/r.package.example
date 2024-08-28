@@ -57,7 +57,6 @@ jobs:
         run: |
           NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
           echo NEW_VERSION=${NEW_VERSION} >> GITHUB_ENV
-          echo ${NEW_VERSION}
 
       - name: Find NEWS.md file
         shell: bash
@@ -65,7 +64,13 @@ jobs:
         run: |
           NEWS_FILE=$(find . -name NEWS.md)
           echo "NEWS_FILE=${NEWS_FILE}" >> GITHUB_ENV
-          echo "news file: ${NEWS_FILE}"
+
+      - name: Print env vars
+        shell: bash
+        run: |
+          echo "package root: ${{ env.PACKAGE_ROOT }}"
+          echo "news file: ${{ env.NEWS_FILE }}"
+          echo "package version: ${{ env.NEW_VERSION }}"
 
       # - name: Bump version in NEWS.md
       #   if: |
