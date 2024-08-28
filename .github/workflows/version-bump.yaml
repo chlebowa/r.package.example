@@ -73,14 +73,14 @@ jobs:
             ) |>
             writeLines(con = "NEWS.md")
 
-      # - name: Commit and push changes
-      #   if: |
-      #     ${{ env.NEW_VERSION }}
-      #   shell: bash
-      #   working-directory: ${{ env.PACKAGE_ROOT }}
-      #   run: |
-      #     git add DESCRIPTION NEWS.md
-      #     git commit \
-      #       -m "bump version to ${{ env.NEW_VERSION }} [skip actions]" \
-      #       --author="github-actiosn[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-      #     git push --force
+      - name: Commit and push changes
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          git status
+          git add DESCRIPTION NEWS.md
+          git commit \
+            -m "bump version to ${{ env.NEW_VERSION }} [skip actions]" \
+            --author="github-actiosn[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          git status
+          # git push --force
