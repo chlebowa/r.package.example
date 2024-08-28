@@ -36,8 +36,9 @@ jobs:
       - name: Report repo name
         shell: bash
         run:
-          echo "package name is ${{ env.PACKAGE_NAME }}"
-          echo "derived package name is ${${{ github.repository }}/${{ github.repository_owner }}\/}"
+          echo "package name is ${{ env.PACKAGE_NAME }} \n"
+          echo "repository is ${{ github.repository }} \n"
+          echo "repository owner is ${{ github.repository_owner }} \n"
 
     #   - name: Locate package root
     #     shell: bash
