@@ -69,7 +69,8 @@ jobs:
 
       - name: Check bool
         if: |
-          steps.find-news.outputs.NEWS_FILE_EXISTS == 'true'
+          steps.find-news.outputs.NEWS_FILE_EXISTS == 'true' ||
+            ${{ env.NEWS_FILE }}
         shell: bash
         run:
           echo "proceeding"
