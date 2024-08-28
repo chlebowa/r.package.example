@@ -67,10 +67,14 @@ jobs:
 
       - name: Print env vars
         shell: bash
+        env:
+          PACKAGE_ROOT: ${{ env.PACKAGE_ROOT }}
+          NEWS_FILE: ${{ env.NEWS_FILE }}
+          NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
-          echo "package root: ${{ env.PACKAGE_ROOT }}"
-          echo "news file: ${{ env.NEWS_FILE }}"
-          echo "package version: ${{ env.NEW_VERSION }}"
+          echo "package root: ${PACKAGE_ROOT}"
+          echo "news file: ${env.NEWS_FILE}"
+          echo "package version: ${NEW_VERSION}"
 
       # - name: Bump version in NEWS.md
       #   if: |
