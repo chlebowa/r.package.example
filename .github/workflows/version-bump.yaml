@@ -14,7 +14,7 @@ jobs:
   vbump:
     name: Bump package version
 
-    runs-on: atmos-aws-arc-runner-set
+    runs-on: ubuntu-latest
 
     if: |
       !contains(github.event.commits[0].message, '[skip vbump]') ||
