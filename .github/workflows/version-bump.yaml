@@ -8,7 +8,6 @@ on:
 
 env:
   PACKAGE_NAME: r.package.example
-  PACKAGE_NAME_DERIVED: ${${{ github.repository }}/$${{ github.repository_owner }}\/}
 
 concurrency:
   group: vbump-${{ github.event.pull_request.numer || github.ref }}
@@ -27,7 +26,7 @@ jobs:
     # container:
     #   image: docker.io/rocker/tidyverse:latest
 
-    # steps:
+    steps:
 
     #   - name: Checkout repo 🛎
     #     uses: actions/checkout@v4.1.1
@@ -38,7 +37,7 @@ jobs:
         shell: bash
         run:
           echo "package name is ${{ env.PACKAGE_NAME }}"
-          echo "derived package name is ${{ env.PACKAGE_NAME_DERIVED }}"
+          echo "derived package name is ${${{ github.repository }}/${{ github.repository_owner }}\/}"
 
     #   - name: Locate package root
     #     shell: bash
