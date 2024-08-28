@@ -59,15 +59,17 @@ jobs:
           echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
       - name: Find NEWS.md file
+        id: find-news
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
           NEWS_FILE=$(find . -name NEWS.md)
           echo "NEWS_FILE=${NEWS_FILE}" >> $GITHUB_ENV
+          echo "NEWS_FILE_EXISTS=true" >> $GITHUB_OUTPUT
 
       - name: Bump version in NEWS.md
         if: |
-          ${{ env.NEWS_FILE }}
+          steps.find-news.outputs.NEWS_FILE_EXISTS == 'true'
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
         env:
