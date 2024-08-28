@@ -65,6 +65,8 @@ jobs:
           echo "NEWS_FILE=${NEWS.md}" >> GITHUB_ENV
 
       - name: Bump version in NEWS.md
+        if: |
+          ${{ env.NEWS_FILE }}
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
         env:
