@@ -55,7 +55,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
-          NEW_VERSION=$(R --slave --vanilla -e 'as.character(desc::desc_get_version())')
+          NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
           echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
       - name: Bump version in NEWS.md
@@ -81,7 +81,7 @@ jobs:
           git config --global --add safe.directory /__w/r.package.example/r.package.example
           git status
           git add DESCRIPTION
-          [ -e NEWS.md ] || git add NEWS.md
+          # [ -e NEWS.md ] || git add NEWS.md
           git commit \
             -m "bump version to ${{ env.NEW_VERSION }} [skip actions]" \
             --author="github-actiosn[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
