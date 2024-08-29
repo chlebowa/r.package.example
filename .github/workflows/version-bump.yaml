@@ -59,7 +59,7 @@ jobs:
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
           package_name <- desc::desc_get_field("Package")
-          package_version <- desc::desc_get_verstion()
+          package_version <- desc::desc_get_version()
           suppressWarnings(readLines("NEWS.md"))[-1L] |>
             append(
               values = sprintf("# %s %s", package_name, package_version),
