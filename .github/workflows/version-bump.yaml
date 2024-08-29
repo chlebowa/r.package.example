@@ -51,24 +51,17 @@ jobs:
         run: |
           if (desc::desc_has_fields("Date")) desc::desc_set("Date", Sys.Date())
 
-      - name: Read new package version
-        shell: bash
-        working-directory: ${{ env.PACKAGE_ROOT }}
-        run: |
-          NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
-          echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
-
       - name: Bump version in NEWS.md
         if: |
           hashFiles('NEWS.md') != ''
         shell: Rscript {0}
         working-directory: ${{ env.PACKAGE_ROOT }}
-        env:
-          NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
+          package_name <- desc::desc_get_field("Package")
+          package_version <- desc::desc_get_verstion()
           suppressWarnings(readLines("NEWS.md"))[-1L] |>
             append(
-              values = sprintf("# teal.builder %s", Sys.getenv("NEW_VERSION")),
+              values = sprintf("# %s %s", package_name, package_version),
               after = 0L
             ) |>
             writeLines(con = "NEWS.md")
@@ -79,6 +72,13 @@ jobs:
           FULL_NAME=${{ github.repository }}
           OWNER_NAME=${{ github.repository_owner }}
           echo "REPO_NAME=${FULL_NAME/$OWNER_NAME\/}" >> $GITHUB_ENV
+
+      - name: Read new package version
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
+          echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
 
       - name: Commit and push changes
         shell: bash
