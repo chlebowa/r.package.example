@@ -55,17 +55,10 @@ jobs:
       - name: Bump version in NEWS.md
         if: |
           hashFiles('NEWS.md') != ''
-        shell: Rscript {0}
+        shell: bash
         working-directory: ${{ env.PACKAGE_ROOT }}
         run: |
-          package_name <- desc::desc_get_field("Package")
-          package_version <- desc::desc_get_version()
-          suppressWarnings(readLines("NEWS.md"))[-1L] |>
-            append(
-              values = sprintf("# %s %s", package_name, package_version),
-              after = 0L
-            ) |>
-            writeLines(con = "NEWS.md")
+          R --slave --vanilla -f ./.github/bump_version_NEWS.R
 
       - name: Obtain repository name
         shell: bash
