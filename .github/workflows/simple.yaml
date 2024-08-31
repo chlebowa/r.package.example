@@ -21,8 +21,7 @@ env:
   # see manual here: https://rstudio.github.io/r-manuals/r-ints/Tools.html
   _R_CHECK_TESTS_NLINES_: 0
   _R_CHECK_VIGNETTES_NLINES_: 0
-  RUN_STEP: false
-  RUN_STEP_STRING: ''
+  RUN_STEP_NULL:
   RUN_STEP_EMPTY:
   RUN_STEP_EMPTY_OBJECT: |
 
@@ -35,33 +34,9 @@ jobs:
         shell: bash
         run: echo "first"
 
-      - name: Second step gated by raw boolean
-        if: false
-        shell: bash
-        run: echo "second"
-
-      - name: Third step gated by boolean env var
-        if: ${{ env.RUN_STEP }}
-        shell: bash
-        run: echo "third"
-
-      - name: Fourth step gated by boolean comparison
-        if: ${{ env.RUN_STEP }} == true
-        shell: bash
-        run: echo "fourth"
-
-      - name: Fifth step gated by character env var
-        if: ${{ env.RUN_STEP_STRING }}
-        shell: bash
-        run: echo "fifth"
-
-      - name: Sixt step gated by character env var comparison
-        if: ${{ env.RUN_STEP_STRING }} != ''
-        shell: bash
-        run: echo "sixth"
-
       - name: Seventh step gated by empty env var
-        if: ${{ env.RUN_STEP_EMPTY }}
+        if: >
+          ${{ env.RUN_STEP_EMPTY }}
         shell: bash
         run: echo "seventh"
 
@@ -69,6 +44,17 @@ jobs:
         if: ${{ env.RUN_STEP_EMPTY_OBJECT }}
         shell: bash
         run: echo "eigth"
+
+      - name: Ninth step gated by empty object in env var
+        if: >
+          ${{ env.RUN_STEP_EMPTY_OBJECT }}
+        shell: bash
+        run: echo "ninth"
+
+      - name: Tenth step gated by null env var
+        if: ${{ env.RUN_STEP_NULL }}
+        shell: bash
+        run: echo "tenth"
 
   # First job.
   hello-world-from-r:
