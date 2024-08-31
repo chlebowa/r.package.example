@@ -33,42 +33,42 @@ jobs:
 
       - name: First step runs always
         shell: bash
-        run: echo "no ifs"
+        run: echo "first"
 
       - name: Second step gated by raw boolean
         if: false
         shell: bash
-        run: echo "if: false"
+        run: echo "second"
 
       - name: Third step gated by boolean env var
         if: ${{ env.RUN_STEP }}
         shell: bash
-        run: echo "if: env.RUN_STEP"
+        run: echo "third"
 
       - name: Fourth step gated by boolean comparison
         if: ${{ env.RUN_STEP }} == true
         shell: bash
-        run: echo "if: env.RUN_STEP == true"
+        run: echo "fourth"
 
       - name: Fifth step gated by character env var
         if: ${{ env.RUN_STEP_STRING }}
         shell: bash
-        run: echo "if: env.RUN_STEP_STRING"
+        run: echo "fifth"
 
       - name: Sixt step gated by character env var comparison
         if: ${{ env.RUN_STEP_STRING }} != ''
         shell: bash
-        run: echo "if: env.RUN_STEP_STRING != ''"
+        run: echo "sixth"
 
       - name: Seventh step gated by empty env var
         if: ${{ env.RUN_STEP_EMPTY }}
         shell: bash
-        run: echo "if: env.RUN_STEP_EMPTY"
+        run: echo "seventh"
 
       - name: Eighth step gated by empty object in env var
         if: ${{ env.RUN_STEP_EMPTY_OBJECT }}
         shell: bash
-        run: echo "if: env.RUN_STEP_EMPTY_OBJECT"
+        run: echo "eigth"
 
   # First job.
   hello-world-from-r:
