@@ -35,7 +35,7 @@ jobs:
         run: echo "first"
 
       - name: Seventh step gated by empty env var
-        if: >
+        if: |
           ${{ env.RUN_STEP_EMPTY }}
         shell: bash
         run: echo "seventh"
@@ -46,7 +46,7 @@ jobs:
         run: echo "eigth"
 
       - name: Ninth step gated by empty object in env var
-        if: >
+        if: |
           ${{ env.RUN_STEP_EMPTY_OBJECT }}
         shell: bash
         run: echo "ninth"
