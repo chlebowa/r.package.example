@@ -21,6 +21,9 @@ env:
   # see manual here: https://rstudio.github.io/r-manuals/r-ints/Tools.html
   _R_CHECK_TESTS_NLINES_: 0
   _R_CHECK_VIGNETTES_NLINES_: 0
+  RUN_STEP_NULL:
+  RUN_STEP_EMPTY:
+  RUN_STEP_EMPTY_OBJECT: |
 
 jobs:
   # First job.
@@ -133,7 +136,8 @@ jobs:
           name: ${{ steps.tar-gz.outputs.full-filename }}
 
   call-reusable-workflow:
+    if: false
     name: Reusable workflow ♻️
     uses: user-workshop-cicd/r.pkg.template/.github/workflows/sample-reusable-workflow.yaml@main
     with:
-      name: Octocat
+      name: Octocat_
