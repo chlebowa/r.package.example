@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      !contains(github.event.commits[0].message, '[skip vbump]') ||
-        !contains(github.event.head_commit.message, '[skip vbump]')
+      !contains(github.event.commits[0].message, '[skip vbump]')
+        || !contains(github.event.head_commit.message, '[skip vbump]')
 
     container:
       image: docker.io/rocker/tidyverse:latest
