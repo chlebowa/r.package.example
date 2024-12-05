@@ -1,0 +1,88 @@
+---
+name: Version Bump
+
+on:
+  push:
+    branches:
+      - testbranch
+
+concurrency:
+  group: vbump-${{ github.event.pull_request.numer || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vbump:
+    name: Bump package version
+
+    runs-on: ubuntu-latest
+
+    if: |
+      !contains(github.event.commits[0].message, '[skip vbump]')
+        || !contains(github.event.head_commit.message, '[skip vbump]')
+
+    container:
+      image: docker.io/rocker/tidyverse:latest
+
+    steps:
+
+      - name: Checkout repo 🛎
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Locate package root
+        shell: bash
+        run: |
+          PACKAGE_ROOT=$(dirname $(find . -name DESCRIPTION))
+          echo "PACKAGE_ROOT=${PACKAGE_ROOT}" >> $GITHUB_ENV
+          echo ${{ env.PACKAGE_ROOT }}
+
+      - name: Bump version in DESCRIPTION 📜
+        if: github.event_name == 'push'
+          # github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: Rscript {0}
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          desc::desc_bump_version("dev", normalize = TRUE)
+
+      - name: Update Date field in DESCRIPTION 📅
+        shell: Rscript {0}
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          if (desc::desc_has_fields("Date")) desc::desc_set("Date", Sys.Date())
+
+      - name: Bump version in NEWS.md
+        if: |
+          hashFiles('NEWS.md') != ''
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          R --slave --vanilla -f ./.github/bump_version_NEWS.R
+
+      - name: Obtain repository name
+        shell: bash
+        run: |
+          FULL_NAME=${{ github.repository }}
+          OWNER_NAME=${{ github.repository_owner }}
+          echo "REPO_NAME=${FULL_NAME/$OWNER_NAME\/}" >> $GITHUB_ENV
+
+      - name: Read new package version
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          NEW_VERSION=$(R --slave --vanilla -e 'cat(as.character(desc::desc_get_version()))')
+          echo NEW_VERSION=${NEW_VERSION} >> $GITHUB_ENV
+
+      - name: Commit and push changes
+        shell: bash
+        working-directory: ${{ env.PACKAGE_ROOT }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com>"
+          git config --global --add safe.directory /__w/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}
+          git add DESCRIPTION
+          if [ -e NEWS.md ]; then
+              git add NEWS.md
+          fi
+          git commit -m "bump version to ${{ env.NEW_VERSION }} [skip actions]"
+          git push --force
